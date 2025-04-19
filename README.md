@@ -23,7 +23,7 @@ Uma API inteligente para transformar transcrições brutas (.txt) em conteúdo r
 ---
 
 ## ⚙️ Instalação
-
+ 
 ```bash
 # Clone o repositório
 git clone https://github.com/seu-usuario/api_chunk_processor.git
