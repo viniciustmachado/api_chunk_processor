@@ -1,0 +1,6 @@
+# PROMPT
+
+
+Você receberá partes de uma transcrição de aula ou palestra. Me fale sobre o conteúdo em apenas 600 caracteres.
+
+Importante: JAMAIS exceda os 600 caracteres, ou será demitido.
