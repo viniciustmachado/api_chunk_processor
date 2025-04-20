@@ -2,9 +2,8 @@
 
 import os
 import uuid
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi.responses import JSONResponse, HTMLResponse
 
 from services.processador import processar_arquivo, juntar_chunks
 from utils.logger import (
@@ -12,6 +11,7 @@ from utils.logger import (
     primeiros_caracteres_sem_cortar,
     gerar_audio_elevenlabs,
 )
+from utils.auth import verificar_api_key
 
 router = APIRouter()
 logger = get_logger()
@@ -26,11 +26,9 @@ Envia um arquivo `.txt` com transcrição. A API processa com a OpenAI (gpt-4o),
 Retorna:
 - Link para o áudio (.mp3)
 - Link para o texto processado (.txt)
-"""
+""",
+    dependencies=[Depends(verificar_api_key)]
 )
-
-
-
 async def upload_gerar_audio(file: UploadFile = File(...)):
     """
     Processa um arquivo .txt com a OpenAI e gera:
@@ -83,12 +81,12 @@ async def upload_gerar_audio(file: UploadFile = File(...)):
     )
 
 
-
-
-
-
-
-@router.get("/listar-arquivos", response_class=HTMLResponse, summary="Painel HTML com os arquivos gerados")
+@router.get(
+    "/listar-arquivos",
+    response_class=HTMLResponse,
+    summary="Painel HTML com os arquivos gerados",
+    dependencies=[Depends(verificar_api_key)]
+)
 def listar_arquivos():
     """
     Gera um painel simples em HTML listando todos os .mp3 e .txt disponíveis na pasta pública.

@@ -2,11 +2,12 @@
 
 import os
 import uuid
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from fastapi.responses import PlainTextResponse
 
 from services.processador import processar_arquivo, juntar_chunks
 from utils.logger import get_logger
+from utils.auth import verificar_api_key
 
 router = APIRouter()
 logger = get_logger()
@@ -25,7 +26,8 @@ A API irá:
 - Processar e salvar o resultado de cada trecho individualmente
 
 📌 Retorna um `arquivo_id` que deve ser usado para buscar o resultado final no endpoint `/resultado/{arquivo_id}`.
-"""
+""",
+    dependencies=[Depends(verificar_api_key)]
 )
 async def upload_arquivo(file: UploadFile = File(...)):
     if not file.filename.endswith(".txt"):
@@ -62,7 +64,8 @@ A API:
 - Retorna o conteúdo em **formato Markdown** (já pronto para publicação ou leitura)
 
 Ideal para transformar transcrições longas em conteúdo legível e didático.
-"""
+""",
+    dependencies=[Depends(verificar_api_key)]
 )
 def obter_resultado(arquivo_id: str):
     try:
